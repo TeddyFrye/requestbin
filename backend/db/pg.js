@@ -54,7 +54,10 @@ async function insertRequest({
     "INSERT INTO requests (basket_id, path, query, method, headers, body_mongo_id) VALUES ($1, $2, $3::jsonb, $4, $5::jsonb, $6) RETURNING *",
     [basketId, path, query, method, headers, bodyMongoId]
   );
+<<<<<<< HEAD
   return rows[0];
+=======
+>>>>>>> ec094e1 (Adds pg methods for requests and baskets)
 }
 
 async function getRequest(id) {
@@ -66,10 +69,14 @@ async function getRequest(id) {
 
 async function listRequests(basketId, { limit = 50, offset = 0 } = {}) {
   const { rows } = await pool.query(
+<<<<<<< HEAD
     `SELECT * FROM requests 
      WHERE basket_id = $1 
      ORDER BY created_at DESC 
      LIMIT $2 OFFSET $3`,
+=======
+    "SELECT * FROM requests WHERE basket_id = $1 LIMIT $2 OFFSET $3",
+>>>>>>> ec094e1 (Adds pg methods for requests and baskets)
     [basketId, limit, offset]
   );
   return rows;
