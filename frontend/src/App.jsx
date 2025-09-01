@@ -1,4 +1,3 @@
-import basketService from "./services/basketService";
 import MainPage from "./components/MainPage";
 import BasketPage from "./components/BasketPage";
 import {

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-import basketService from "../services/basketService";
+import { basketService } from "../services/basketService";
 
 // TODO: extract this to a project wide file (alongside App.jsx)
 const URL_PREFIX = "/web";
