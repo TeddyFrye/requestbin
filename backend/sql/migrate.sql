@@ -1,12 +1,12 @@
 CREATE TABLE baskets (
     id SERIAL PRIMARY KEY,
-    name TEXT NOT NULL,
+    name UNIQUE TEXT NOT NULL,
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
 CREATE TABLE requests (
     id SERIAL PRIMARY KEY,
-		basket_id NOT NULL REFERENCES baskets(id) ON DELETE CASCADE,
+		basket_id INTEGER NOT NULL REFERENCES baskets(id) ON DELETE CASCADE,
     path TEXT,
 		query JSONB DEFAULT '{}'::jsonb,
     method TEXT NOT NULL,
