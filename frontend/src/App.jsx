@@ -1,4 +1,3 @@
-import { useState } from "react";
 import basketService from "./services/basketService";
 import MainPage from "./components/MainPage";
 import BasketPage from "./components/BasketPage";
@@ -6,9 +5,7 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
-  Link,
   Navigate,
-  useParams,
 } from "react-router-dom";
 
 function App() {

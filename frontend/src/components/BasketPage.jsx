@@ -2,7 +2,6 @@ import { Link, useParams } from "react-router-dom";
 
 const BasketPage = () => {
   const { id } = useParams();
-  console.log(id);
 
   return (
     <div>
