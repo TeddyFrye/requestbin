@@ -1,0 +1,2 @@
+POST http://localhost:3001/api/baskets
+Content-Type: application/json
