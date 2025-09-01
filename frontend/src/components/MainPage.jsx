@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 import basketService from "../services/basketService";
 
@@ -21,6 +22,11 @@ const ButtonSection = () => {
   );
 };
 
+const DUMMY_BASKETS = [
+  { id: "abc123", name: "this is basket abc123" },
+  { id: "xyz890", name: "this is basket xyz890" },
+];
+
 const BasketList = () => {
   const [basketNames, setBasketNames] = useState([]);
 
@@ -28,16 +34,15 @@ const BasketList = () => {
     (async () => {
       // TODO: uncomment after basketService implementation
       // const allNames = basketService.all();
-      const allNames = ["abc", "123"];
+      const allNames = DUMMY_BASKETS;
       setBasketNames(allNames);
     })();
   }, []);
 
-  const basketListItem = (basketName) => {
-    // TODO: incorporate react router
+  const basketListItem = ({ id, name }) => {
     return (
-      <li key={basketName}>
-        <a href={`${URL_PREFIX}/${basketName}`}>{basketName}</a>
+      <li key={id}>
+        <Link to={`${URL_PREFIX}/${id}`}>{name}</Link>
       </li>
     );
   };
