@@ -1,0 +1,2 @@
+DELETE http://localhost:3001/api/baskets/xyz7890/requests
+Content-Type: application/json
