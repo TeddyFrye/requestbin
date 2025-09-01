@@ -4,6 +4,7 @@ const API = `${API_HOST}/api`;
 // TODO: more graceful error handling?
 // perhaps that should be left up to individual components
 // but we may want some retries here or something
+// currently all errors are re thrown
 
 export class BasketNotFoundError extends Error {
   constructor(message) {
