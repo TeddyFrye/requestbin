@@ -1,6 +1,6 @@
 CREATE TABLE baskets (
     id SERIAL PRIMARY KEY,
-    name TEXT NOT NULL UNIQUE,
+    name UNIQUE TEXT NOT NULL,
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
