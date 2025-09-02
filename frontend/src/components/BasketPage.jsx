@@ -43,7 +43,18 @@ const DUMMY_REQUESTS = [
   },
 ];
 
-const BasketHeader = () => {};
+const BasketHeader = () => {
+  const { id } = useParams();
+  // would have to refactor requests to pull data from fetch
+  // and then display the amount of requests for the current basket
+  return (
+    <section>
+      <p>Basket: {id}</p>
+      <p>Requests are collected at: {`https:localhost:5173/web/${id}`}</p>
+      <p>Requests: {DUMMY_REQUESTS.length}</p>
+    </section>
+  );
+};
 
 const RequestBasket = () => {
   const { id } = useParams();
@@ -84,6 +95,7 @@ const RequestBasket = () => {
 const BasketPage = () => {
   return (
     <div>
+      <BasketHeader />
       <RequestBasket />
       <Link to="/web">Click here to return to all baskets</Link>
     </div>
