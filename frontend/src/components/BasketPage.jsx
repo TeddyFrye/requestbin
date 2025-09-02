@@ -1,5 +1,7 @@
 import { Link, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+
+const HOST = "https:localhost:5173";
 const DUMMY_REQUESTS = [
   {
     id: "abc123",
@@ -50,7 +52,7 @@ const BasketHeader = () => {
   return (
     <section>
       <p>Basket: {id}</p>
-      <p>Requests are collected at: {`https:localhost:5173/web/${id}`}</p>
+      <p>Requests are collected at: {`${HOST}/${id}`}</p>
       <p>Requests: {DUMMY_REQUESTS.length}</p>
     </section>
   );
