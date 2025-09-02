@@ -21,6 +21,26 @@ const DUMMY_REQUESTS = [
       },
     ],
   },
+  {
+    id: "xyz890",
+    name: "this is basket xyz890",
+    requests: [
+      {
+        method: "POST",
+        timestamp: "MONDAY sept 1st 7:30pm",
+        headers: {
+          "Content-Type": "json/application",
+        },
+      },
+      {
+        method: "GET",
+        timestamp: "TUESDAY sept 2nd 4:30am",
+        headers: {
+          "Content-Type": "json/application",
+        },
+      },
+    ],
+  },
 ];
 
 const BasketHeader = () => {};
