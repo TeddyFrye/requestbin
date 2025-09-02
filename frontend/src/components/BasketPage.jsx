@@ -34,7 +34,7 @@ const RequestBasket = () => {
       // fetch data for all requests stored in database
       // basketService.getBasket(id)
       const basket = DUMMY_REQUESTS.find((b) => b.id === id);
-      setAllRequests(basket.requests);
+      if (basket) setAllRequests(basket.requests);
     })();
   }, [id]);
 
