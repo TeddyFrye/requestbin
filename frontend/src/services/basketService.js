@@ -1,4 +1,4 @@
-const API_HOST = "http://localhost:3000";
+const API_HOST = "http://localhost:3001";
 const API = `${API_HOST}/api`;
 
 // TODO: more graceful error handling?
@@ -28,7 +28,7 @@ const getBasket = async (basketName) => {
   try {
     const response = await fetch(`${API}/baskets/${basketName}`);
     if (response.status === 404) {
-      throw BasketNotFoundError(`No basket exists with name ${basketName}`);
+      throw new BasketNotFoundError(`No basket exists with name ${basketName}`);
     }
     const requests = await response.json();
     return requests;
@@ -43,8 +43,11 @@ const newBasket = async () => {
     const response = await fetch(`${API}/baskets`, {
       method: "post",
     });
-    const newBasketName = await response.json();
-    return newBasketName;
+    const { name } = await response.json();
+    if (typeof name !== "string") {
+      throw Error(`Error generating new basket: response not understood`);
+    }
+    return name;
   } catch (error) {
     console.error(error);
     throw error;
@@ -57,7 +60,7 @@ const emptyBasket = async (basketName) => {
       method: "delete",
     });
     // TODO: do we need this check? should we throw an error if it fails?
-    return response.status === 205; // 205 Reset Content
+    return response.status === 204; // 204 No Content
   } catch (error) {
     console.error(error);
     throw error;
