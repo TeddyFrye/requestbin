@@ -1,4 +1,4 @@
-const API_HOST = "http://localhost:3000";
+const API_HOST = "http://localhost:3001";
 const API = `${API_HOST}/api`;
 
 // TODO: more graceful error handling?
