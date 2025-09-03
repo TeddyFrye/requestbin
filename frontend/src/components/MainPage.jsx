@@ -33,7 +33,7 @@ const BasketList = () => {
   useEffect(() => {
     (async () => {
       // TODO: uncomment after basketService implementation
-      // const allNames = basketService.all();
+      // const allNames = await basketService.all();
       const allNames = DUMMY_BASKETS;
       setBasketNames(allNames);
     })();
@@ -46,7 +46,7 @@ const BasketList = () => {
       </li>
     );
   };
-
+  console.log(basketNames);
   return (
     <section>
       <h1>{LIST_TITLE}</h1>
