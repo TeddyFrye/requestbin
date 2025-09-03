@@ -43,8 +43,11 @@ const newBasket = async () => {
     const response = await fetch(`${API}/baskets`, {
       method: "post",
     });
-    const newBasketName = await response.json();
-    return newBasketName;
+    const { name } = await response.json();
+    if (typeof name !== "string") {
+      throw Error(`Error generating new basket: response not understood`);
+    }
+    return name;
   } catch (error) {
     console.error(error);
     throw error;
