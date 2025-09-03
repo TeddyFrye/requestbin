@@ -28,7 +28,7 @@ const getBasket = async (basketName) => {
   try {
     const response = await fetch(`${API}/baskets/${basketName}`);
     if (response.status === 404) {
-      throw BasketNotFoundError(`No basket exists with name ${basketName}`);
+      throw new BasketNotFoundError(`No basket exists with name ${basketName}`);
     }
     const requests = await response.json();
     return requests;
