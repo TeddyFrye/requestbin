@@ -22,27 +22,20 @@ const ButtonSection = () => {
   );
 };
 
-const DUMMY_BASKETS = [
-  { id: "abc123", name: "this is basket abc123" },
-  { id: "xyz890", name: "this is basket xyz890" },
-];
-
 const BasketList = () => {
   const [basketNames, setBasketNames] = useState([]);
 
   useEffect(() => {
     (async () => {
-      // TODO: uncomment after basketService implementation
-      // const allNames = basketService.all();
-      const allNames = DUMMY_BASKETS;
+      const allNames = await basketService.all();
       setBasketNames(allNames);
     })();
   }, []);
 
-  const basketListItem = ({ id, name }) => {
+  const basketListItem = (name) => {
     return (
-      <li key={id}>
-        <Link to={`${URL_PREFIX}/${id}`}>{name}</Link>
+      <li key={name}>
+        <Link to={`${URL_PREFIX}/${name}`}>{name}</Link>
       </li>
     );
   };
