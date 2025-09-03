@@ -46,7 +46,7 @@ const BasketList = () => {
       </li>
     );
   };
-  console.log(basketNames);
+
   return (
     <section>
       <h1>{LIST_TITLE}</h1>

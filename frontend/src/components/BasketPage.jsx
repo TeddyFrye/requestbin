@@ -31,10 +31,10 @@ const ViewHeaders = ({ headers }) => {
   );
 };
 
-const DeleteBasketButton = () => {
+const DeleteBasketButton = ({ deleteBasket }) => {
   return (
     <div>
-      <button>Delete entire basket</button>
+      <button onClick={deleteBasket}>Delete entire basket</button>
     </div>
   );
 };
@@ -93,16 +93,23 @@ const BasketPage = () => {
     })();
   }, [id, navigate]);
 
-  const handleDeleteRequest = () => {
-    (async () => {
-      try {
-        const res = await basketService.emptyBasket(id);
+  const handleDeleteRequest = async () => {
+    try {
+      const res = await basketService.emptyBasket(id);
 
-        if (res) setAllRequests([]);
-      } catch (error) {
-        console.log(error);
-      }
-    })();
+      if (res) setAllRequests([]);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleDeleteBasket = async () => {
+    try {
+      const res = await basketService.deleteBasket(id);
+      if (res) navigate("/web", { replace: true });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -110,7 +117,7 @@ const BasketPage = () => {
       <BasketHeader requestsCount={allRequests.length} />
       <RequestBasket allRequests={allRequests} />
       <DeleteAllRequestsButton deleteRequests={handleDeleteRequest} />
-      <DeleteBasketButton />
+      <DeleteBasketButton deleteBasket={handleDeleteBasket} />
       <Link to="/web">Click here to return to all baskets</Link>
     </div>
   );
