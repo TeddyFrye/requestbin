@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { basketService } from "../services/basketService";
 
@@ -13,36 +13,41 @@ const CREATE_BUTTON = "Create";
 const LIST_TITLE = "Existing Baskets";
 
 const ButtonSection = () => {
+  const navigate = useNavigate();
+
+  const handleCreate = async () => {
+    try {
+      const newBasketName = await basketService.newBasket();
+      navigate(`${URL_PREFIX}/${newBasketName}`);
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
     <section>
       <h1>{CREATE_TITLE}</h1>
       <p>{CREATE_DESCRIPTION}</p>
-      <button type="button">{CREATE_BUTTON}</button>
+      <button type="button" onClick={handleCreate}>
+        {CREATE_BUTTON}
+      </button>
     </section>
   );
 };
-
-const DUMMY_BASKETS = [
-  { id: "abc123", name: "this is basket abc123" },
-  { id: "xyz890", name: "this is basket xyz890" },
-];
 
 const BasketList = () => {
   const [basketNames, setBasketNames] = useState([]);
 
   useEffect(() => {
     (async () => {
-      // TODO: uncomment after basketService implementation
-      // const allNames = await basketService.all();
-      const allNames = DUMMY_BASKETS;
+      const allNames = await basketService.all();
       setBasketNames(allNames);
     })();
   }, []);
 
-  const basketListItem = ({ id, name }) => {
+  const basketListItem = (name) => {
     return (
-      <li key={id}>
-        <Link to={`${URL_PREFIX}/${id}`}>{name}</Link>
+      <li key={name}>
+        <Link to={`${URL_PREFIX}/${name}`}>{name}</Link>
       </li>
     );
   };
