@@ -41,6 +41,7 @@ const RequestBasket = ({ allRequests }) => {
         <p>Date: {new Date(request.timestamp).toLocaleDateString()}</p>
         <p>Time: {new Date(request.timestamp).toLocaleTimeString()}</p>
         <ViewHeaders headers={request.headers} />
+        <p>Body: {request.body}</p>
       </li>
     );
   };
@@ -72,7 +73,7 @@ const BasketPage = () => {
         navigate("/web", { replace: true });
       }
     })();
-  }, [id]);
+  }, [id, navigate]);
 
   return (
     <div>
