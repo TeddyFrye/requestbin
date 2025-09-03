@@ -57,7 +57,7 @@ const emptyBasket = async (basketName) => {
       method: "delete",
     });
     // TODO: do we need this check? should we throw an error if it fails?
-    return response.status === 205; // 205 Reset Content
+    return response.status === 204; // 204 Reset Content
   } catch (error) {
     console.error(error);
     throw error;

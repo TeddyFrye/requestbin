@@ -31,6 +31,24 @@ const ViewHeaders = ({ headers }) => {
   );
 };
 
+const DeleteBasketButton = () => {
+  return (
+    <div>
+      <button>Delete entire basket</button>
+    </div>
+  );
+};
+
+const DeleteAllRequestsButton = ({ deleteRequests }) => {
+  return (
+    <div>
+      <button onClick={deleteRequests}>
+        Delete all currently tracked requests
+      </button>
+    </div>
+  );
+};
+
 const RequestBasket = ({ allRequests }) => {
   const RequestItem = ({ request, index }) => {
     // converted timestamp string into Date for easy formatting of time/date
@@ -75,10 +93,24 @@ const BasketPage = () => {
     })();
   }, [id, navigate]);
 
+  const handleDeleteRequest = () => {
+    (async () => {
+      try {
+        const res = await basketService.emptyBasket(id);
+
+        if (res) setAllRequests([]);
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+  };
+
   return (
     <div>
       <BasketHeader requestsCount={allRequests.length} />
       <RequestBasket allRequests={allRequests} />
+      <DeleteAllRequestsButton deleteRequests={handleDeleteRequest} />
+      <DeleteBasketButton />
       <Link to="/web">Click here to return to all baskets</Link>
     </div>
   );
