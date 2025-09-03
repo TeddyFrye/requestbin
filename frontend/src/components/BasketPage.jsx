@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { basketService } from "../services/basketService";
 
@@ -60,12 +60,17 @@ const BasketPage = () => {
   // moved allRequests to BasketPage in order to pass state of basket to
   // other components
   const { id } = useParams();
+  const navigate = useNavigate();
   const [allRequests, setAllRequests] = useState([]);
 
   useEffect(() => {
     (async () => {
-      const basket = await basketService.getBasket(id);
-      if (basket) setAllRequests(basket);
+      try {
+        const basket = await basketService.getBasket(id);
+        if (basket) setAllRequests(basket);
+      } catch {
+        navigate("/web", { replace: true });
+      }
     })();
   }, [id]);
 
