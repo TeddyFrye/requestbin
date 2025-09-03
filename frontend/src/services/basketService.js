@@ -28,7 +28,7 @@ const getBasket = async (basketName) => {
   try {
     const response = await fetch(`${API}/baskets/${basketName}`);
     if (response.status === 404) {
-      throw BasketNotFoundError(`No basket exists with name ${basketName}`);
+      throw new BasketNotFoundError(`No basket exists with name ${basketName}`);
     }
     const requests = await response.json();
     return requests;
@@ -60,7 +60,7 @@ const emptyBasket = async (basketName) => {
       method: "delete",
     });
     // TODO: do we need this check? should we throw an error if it fails?
-    return response.status === 205; // 205 Reset Content
+    return response.status === 204; // 204 Reset Content
   } catch (error) {
     console.error(error);
     throw error;
