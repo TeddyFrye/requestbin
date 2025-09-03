@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { basketService } from "../services/basketService";
 
@@ -13,11 +13,23 @@ const CREATE_BUTTON = "Create";
 const LIST_TITLE = "Existing Baskets";
 
 const ButtonSection = () => {
+  const navigate = useNavigate();
+
+  const handleCreate = async () => {
+    try {
+      const newBasketName = await basketService.newBasket();
+      navigate(`${URL_PREFIX}/${newBasketName}`);
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
     <section>
       <h1>{CREATE_TITLE}</h1>
       <p>{CREATE_DESCRIPTION}</p>
-      <button type="button">{CREATE_BUTTON}</button>
+      <button type="button" onClick={handleCreate}>
+        {CREATE_BUTTON}
+      </button>
     </section>
   );
 };
