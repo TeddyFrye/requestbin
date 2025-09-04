@@ -33,7 +33,6 @@ async function main() {
     }
 
     if (process.env.KEEP_EMPTY !== "1") {
-      console.log("not keeping empty");
       const basketNames = ["webhooks-demo", "payments", "staging-bin"];
       const baskets = [];
       for (const name of basketNames) {
