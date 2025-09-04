@@ -48,7 +48,7 @@ async function insertRequest({
   query,
   method,
   headers,
-  bodyMongoId,
+  bodyMongoId, // mongo id provided by storeRequest() in mongo.js
 }) {
   const { rows } = await pool.query(
     "INSERT INTO requests (basket_id, path, query, method, headers, body_mongo_id) VALUES ($1, $2, $3::jsonb, $4, $5::jsonb, $6) RETURNING *",

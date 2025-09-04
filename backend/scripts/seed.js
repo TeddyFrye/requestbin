@@ -36,7 +36,11 @@ async function main() {
     const baskets = [];
     for (const name of basketNames) {
       const { rows } = await pg.query(
-        `INSERT INTO baskets (name) VALUES ($1) RETURNING id, name, created_at`,
+        `INSERT INTO baskets (name)
+     VALUES ($1)
+     ON CONFLICT (name) DO UPDATE
+       SET name = EXCLUDED.name   -- no-op, but lets us RETURNING
+     RETURNING id, name, created_at`,
         [name]
       );
       baskets.push(rows[0]);
