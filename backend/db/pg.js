@@ -1,3 +1,4 @@
+const { getBodyById } = require("./mongo");
 const fs = require("fs");
 const path = require("path");
 const { Pool } = require("pg");
@@ -30,9 +31,9 @@ async function createBasket(name) {
   return rows[0];
 }
 
-async function getBasket(id) {
-  const { rows } = await pool.query("SELECT * FROM baskets WHERE id = $1", [
-    id,
+async function getBasket(name) {
+  const { rows } = await pool.query("SELECT * FROM baskets WHERE name = $1", [
+    name,
   ]);
   return rows[0];
 }
@@ -76,9 +77,10 @@ async function listRequests(basketId, { limit = 50, offset = 0 } = {}) {
 }
 
 async function deleteRequests(id) {
-  const { rowCount } = await pool.query("DELETE FROM requests WHERE basket_id = $1", [
-    id,
-  ]);
+  const { rowCount } = await pool.query(
+    "DELETE FROM requests WHERE basket_id = $1",
+    [id]
+  );
   return rowCount === 1;
 }
 
@@ -87,6 +89,38 @@ async function deleteBasket(id) {
     id,
   ]);
   return rowCount === 1;
+}
+
+async function getRequestsWithBodies(basketId) {
+  const { rows: requests } = await pool.query(
+    "SELECT * FROM requests WHERE basket_id = $1 ORDER BY created_at DESC",
+    [basketId]
+  );
+
+  const enriched = await Promise.all(
+    requests.map(async (req) => {
+      let body = null;
+      try {
+        if (req.body_mongo_id) {
+          const doc = await getBodyById(req.body_mongo_id);
+          // body = doc?.json_string ?? null; --> og implementation
+          body = doc?.json_string ?? null;
+        }
+      } catch (err) {
+        console.error(
+          `Failed to fetch Mongo body for ID ${req.body_mongo_id}`,
+          err
+        );
+      }
+
+      return {
+        ...req,
+        raw_body: body,
+      };
+    })
+  );
+
+  return enriched;
 }
 
 async function close() {
@@ -103,5 +137,6 @@ module.exports = {
   listRequests,
   deleteRequests,
   deleteBasket,
+  getRequestsWithBodies,
   close,
 };

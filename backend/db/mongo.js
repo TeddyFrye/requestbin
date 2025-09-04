@@ -17,18 +17,15 @@ async function connect() {
   await col.createIndex({ created_at: 1 });
   return col;
 }
+
 // call storeRequest to save the raw body and get back the ID
-async function storeRequest(rawBody, basketId) {
+async function storeRequest(rawBody, basketName) {
   const col = await connect();
 
-  const jsonString =
-    typeof rawBody === "string" ? rawBody : JSON.stringify(rawBody ?? "");
-
   const doc = {
-    json_string: jsonString,
-    size_bytes: Buffer.byteLength(jsonString, "utf8"),
+    json_string: rawBody,
     created_at: new Date(),
-    basketId: basketId,
+    basketName: basketName,
   };
   const res = await col.insertOne(doc);
   return res.insertedId.toString();
@@ -37,7 +34,7 @@ async function storeRequest(rawBody, basketId) {
 async function getRequest(id) {
   const col = await connect();
   const doc = await col.findOne({ _id: ObjectId(id) });
-  return doc ? JSON.parse(doc.json_string) : null;
+  return doc ? doc.json_string : null;
 }
 
 async function deleteRequest(id) {
@@ -62,10 +59,18 @@ async function close() {
   }
 }
 
+async function getBodyById(id) {
+  const col = await connect();
+  const doc = await col.findOne({ _id: new ObjectId(id) });
+  console.log(doc);
+  return doc;
+}
+
 module.exports = {
   storeRequest,
   getRequest,
   close,
   deleteRequest,
   deleteRequestsByBasketId,
+  getBodyById,
 };
