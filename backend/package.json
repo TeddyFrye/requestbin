@@ -9,7 +9,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "migrate": "node scripts/migrate.js",
     "seed": "node scripts/seed.js",
-    "seed:reset": "SEED_RESET=1 node scripts/seed.js"
+    "seed:reset": "SEED_RESET=1 node scripts/seed.js",
+    "smoke": "node scripts/mongo-smoke.js"
   },
   "author": "",
   "license": "ISC",
