@@ -45,6 +45,12 @@ async function deleteRequest(id) {
   return res.deletedCount === 1;
 }
 
+async function deleteRequestsByBasketId(basketId) {
+  const col = await connect();
+  const res = await col.deleteMany({ basketId: basketId });
+  return res.deletedCount > 0;
+}
+
 // closes the database connection
 async function close() {
   if (client) {
@@ -60,4 +66,5 @@ module.exports = {
   getRequest,
   close,
   deleteRequest,
+  deleteRequestsByBasketId,
 };
