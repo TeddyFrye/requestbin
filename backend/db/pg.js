@@ -75,6 +75,13 @@ async function listRequests(basketId, { limit = 50, offset = 0 } = {}) {
   return rows;
 }
 
+async function deleteRequest(id) {
+  const { rowCount } = await pool.query("DELETE FROM requests WHERE id = $1", [
+    id,
+  ]);
+  return rowCount === 1;
+}
+
 async function close() {
   await pool.end();
 }
@@ -87,5 +94,6 @@ module.exports = {
   insertRequest,
   getRequest,
   listRequests,
+  deleteRequest,
   close,
 };

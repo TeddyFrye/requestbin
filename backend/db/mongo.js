@@ -39,6 +39,12 @@ async function getRequest(id) {
   return doc ? JSON.parse(doc.json_string) : null;
 }
 
+async function deleteRequest(id) {
+  const col = await connect();
+  const res = await col.deleteOne({ _id: ObjectId(id) });
+  return res.deletedCount === 1;
+}
+
 // closes the database connection
 async function close() {
   if (client) {
@@ -53,4 +59,5 @@ module.exports = {
   storeRequest,
   getRequest,
   close,
+  deleteRequest,
 };
