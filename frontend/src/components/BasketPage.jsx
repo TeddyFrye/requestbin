@@ -18,13 +18,9 @@ const BasketHeader = ({ requestsCount }) => {
 const ViewHeaders = ({ headers }) => {
   return (
     <div>
-      {headers.map((header, index) => (
+      {Object.entries(headers).map(([header, headerVal], index) => (
         <div key={index}>
-          {Object.entries(header).map(([key, value]) => (
-            <p key={key}>
-              {key}: {value}
-            </p>
-          ))}
+          {header}: {headerVal}
         </div>
       ))}
     </div>
@@ -49,6 +45,14 @@ const DeleteAllRequestsButton = ({ deleteRequests }) => {
   );
 };
 
+const ViewBody = ({ body }) => {
+  if (body === null) {
+    return;
+  } else {
+    return <p>Body: {body}</p>;
+  }
+};
+
 const RequestBasket = ({ allRequests }) => {
   const RequestItem = ({ request, index }) => {
     // converted timestamp string into Date for easy formatting of time/date
@@ -56,10 +60,11 @@ const RequestBasket = ({ allRequests }) => {
     return (
       <li key={index}>
         <p>Method: {request.method}</p>
-        <p>Date: {new Date(request.timestamp).toLocaleDateString()}</p>
-        <p>Time: {new Date(request.timestamp).toLocaleTimeString()}</p>
+        <p>{request.path}</p>
+        <p>Date: {new Date(request.created_at).toLocaleDateString()}</p>
+        <p>Time: {new Date(request.created_at).toLocaleTimeString()}</p>
         <ViewHeaders headers={request.headers} />
-        <p>Body: {request.body}</p>
+        <ViewBody body={request.raw_body} />
       </li>
     );
   };
