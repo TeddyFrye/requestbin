@@ -1,83 +1,52 @@
-const express = require('express')
-const app = express()
+const express = require('express');
+const app = express();
 const cors = require("cors");
+const PgPersistence = require("./db/pg");
+const MongoDB = require("./db/mongo");
 
-app.use(cors())
-app.use(express.json())
-
-let baskets = [
-  {
-    name: "abc1234",
-    requests: [],
-  },
-  {
-    name: "xyz7890",
-    requests: [{'method': 'POST', 'timestamp': '2024-10-10T10:10:10.000Z', 'headers': [{'Content-Type': 'application/json'}], 'body': '{"url": "http://example.com"}'}],
-  },
-]
-//Do I need this one?
-app.get('/', (request, response) => {
-  response.send('<h1>Hello World!</h1>')
-})
+app.use(cors());
+app.use(express.json());
 //View all baskets
-app.get('/api/baskets', (request, response) => {
-  response.json(baskets.map(basket => basket.name));
+app.get('/api/baskets', async (request, response) => {
+  let baskets = await PgPersistence.listBaskets();
+  response.json(baskets);
 })
 //Add a new basket
-app.post('/api/baskets', (request, response) => {
-  const basket = {
-    name: generateName(),
-    requests: [],
-  }
-
-  baskets = baskets.concat(basket)
-  response.json(basket)
+app.post('/api/baskets', async (request, response) => {
+  let name = generateName();
+  let newBasket = await PgPersistence.createBasket(name);
+  response.json(newBasket);
 })
-//View a specific basket (don't need the name)
-app.get('/api/baskets/:name', (request, response) => {
-  const name = request.params.name
-  const basket = baskets.find(basket => basket.name === name)
+//View a specific basket
+app.get('/api/baskets/:name', async (request, response) => {
+  const name = request.params.name;
+  let basket = await PgPersistence.getBasket(name);
 
   if (basket) {
-    response.json(basket.requests)
+    response.json(basket);
   } else {
-    response.status(404).end()
+    response.status(404).end();
   }
+
+  console.log(basket);
 })
 //Delete the current basket
 app.delete('/api/baskets/:name', (request, response) => {
-  const name = request.params.name
-  baskets = baskets.filter(basket => basket.name !== name)
-  response.status(204).end()
-})
-//Add a new request to the current basket
-app.post('/api/baskets/:name', (request, response) => {
-  const name = request.params.name
-  
-  const newRequest = {
-    method: "",
-    timestamp: "",
-    headers: [],
-    body: "",
-  }
-
-  const basket = baskets.find(basket => basket.name === name)
-  basket.requests = basket.requests.concat(newRequest)
-
-  response.json(basket)
-})
-
+  const name = request.params.name;
+  baskets = baskets.filter(basket => basket.name !== name);
+  response.status(204).end();
+});
 //Delete all requests in the current basket
 app.delete('/api/baskets/:name/requests', (request, response) => {
-  const name = request.params.name
-  const basket = baskets.find(basket => basket.name === name)
-  basket.requests = []
-  response.status(204).end()
-})
+  const name = request.params.name;
+  const basket = baskets.find(basket => basket.name === name);
+  basket.requests = [];
+  response.status(204).end();
+});
 
-const PORT = 3001
+const PORT = 3001;
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`)
+  console.log(`Server running on port ${PORT}`);
 })
 
 function generateName() {
@@ -85,7 +54,7 @@ function generateName() {
   let name = '';
 
   for (let index = 0; index < 7; index += 1) {
-    name += chars[Math.floor(Math.random() * chars.length)]
+    name += chars[Math.floor(Math.random() * chars.length)];
   }
 
   return name;
