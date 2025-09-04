@@ -6,7 +6,7 @@ const COLLECTION = process.env.MONGO_COLLECTION || "request_bodies";
 let client;
 let db;
 let col;
-
+// connects to the MongoDB database
 async function connect() {
   if (col) return col;
   client = new MongoClient(MONGO_URL);
@@ -16,7 +16,7 @@ async function connect() {
   await col.createIndex({ created_at: 1 });
   return col;
 }
-
+// call storeRequest to save the raw body and get back the ID
 async function storeRequest(rawBody) {
   const col = await connect();
 
@@ -52,6 +52,7 @@ async function getRequest(id) {
   return { _id: doc._id.toString(), json_string: doc.json_string };
 }
 
+// closes the database connection
 async function close() {
   if (client) {
     await client.close();
