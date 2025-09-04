@@ -32,108 +32,113 @@ async function main() {
       await bodies.deleteMany({});
     }
 
-    const basketNames = ["webhooks-demo", "payments", "staging-bin"];
-    const baskets = [];
-    for (const name of basketNames) {
-      const { rows } = await pg.query(
-        `INSERT INTO baskets (name)
+    if (process.env.KEEP_EMPTY !== "1") {
+      const basketNames = ["webhooks-demo", "payments", "staging-bin"];
+      const baskets = [];
+      for (const name of basketNames) {
+        const { rows } = await pg.query(
+          `INSERT INTO baskets (name)
      VALUES ($1)
      ON CONFLICT (name) DO UPDATE
        SET name = EXCLUDED.name   -- no-op, but lets us RETURNING
      RETURNING id, name, created_at`,
-        [name]
-      );
-      baskets.push(rows[0]);
-    }
-
-    const METHODS = ["GET", "POST", "PUT", "PATCH", "DELETE"];
-    const PATHS = [
-      "/foo",
-      "/bar",
-      "/api/v1/orders",
-      "/hello/world",
-      "/checkout/success",
-    ];
-
-    const EXAMPLE_BODIES = [
-      "",
-      JSON.stringify({ event: "ping", ts: nowIso() }),
-      JSON.stringify({
-        type: "order.created",
-        data: { id: 12345, amount_cents: 4999 },
-      }),
-      "not-json body=raw&x=1",
-      JSON.stringify({
-        type: "customer.updated",
-        data: {
-          id: "cus_" + Math.random().toString(36).slice(2, 8),
-          active: true,
-        },
-      }),
-    ];
-
-    const headersBase = {
-      "x-seed": "true",
-      accept: "*/*",
-    };
-
-    let inserted = 0;
-
-    for (let i = 0; i < 25; i++) {
-      const basket = randPick(baskets);
-      const method = randPick(METHODS);
-      const path = randPick(PATHS);
-      const query = { q: ["alpha", "beta", "gamma"][i % 3], page: 1 + (i % 5) };
-
-      const candidateBody = randPick(EXAMPLE_BODIES);
-      const hasBody = candidateBody !== "";
-      const headers = {
-        ...headersBase,
-        "user-agent": `seed-bot/${i}`,
-        "x-request-id": `rb-${i}-${Math.random().toString(36).slice(2, 8)}`,
-        ...(hasBody
-          ? {
-              "content-type": candidateBody.startsWith("{")
-                ? "application/json"
-                : "text/plain",
-            }
-          : {}),
-      };
-
-      let bodyMongoId = null;
-      if (hasBody) {
-        const doc = {
-          json_string: candidateBody,
-          size_bytes: Buffer.byteLength(candidateBody, "utf8"),
-          created_at: new Date(),
-        };
-        const res = await bodies.insertOne(doc);
-        bodyMongoId = res.insertedId.toString();
+          [name]
+        );
+        baskets.push(rows[0]);
       }
 
-      await pg.query(
-        `
+      const METHODS = ["GET", "POST", "PUT", "PATCH", "DELETE"];
+      const PATHS = [
+        "/foo",
+        "/bar",
+        "/api/v1/orders",
+        "/hello/world",
+        "/checkout/success",
+      ];
+
+      const EXAMPLE_BODIES = [
+        "",
+        JSON.stringify({ event: "ping", ts: nowIso() }),
+        JSON.stringify({
+          type: "order.created",
+          data: { id: 12345, amount_cents: 4999 },
+        }),
+        "not-json body=raw&x=1",
+        JSON.stringify({
+          type: "customer.updated",
+          data: {
+            id: "cus_" + Math.random().toString(36).slice(2, 8),
+            active: true,
+          },
+        }),
+      ];
+
+      const headersBase = {
+        "x-seed": "true",
+        accept: "*/*",
+      };
+
+      let inserted = 0;
+
+      for (let i = 0; i < 25; i++) {
+        const basket = randPick(baskets);
+        const method = randPick(METHODS);
+        const path = randPick(PATHS);
+        const query = {
+          q: ["alpha", "beta", "gamma"][i % 3],
+          page: 1 + (i % 5),
+        };
+
+        const candidateBody = randPick(EXAMPLE_BODIES);
+        const hasBody = candidateBody !== "";
+        const headers = {
+          ...headersBase,
+          "user-agent": `seed-bot/${i}`,
+          "x-request-id": `rb-${i}-${Math.random().toString(36).slice(2, 8)}`,
+          ...(hasBody
+            ? {
+                "content-type": candidateBody.startsWith("{")
+                  ? "application/json"
+                  : "text/plain",
+              }
+            : {}),
+        };
+
+        let bodyMongoId = null;
+        if (hasBody) {
+          const doc = {
+            json_string: candidateBody,
+            size_bytes: Buffer.byteLength(candidateBody, "utf8"),
+            created_at: new Date(),
+          };
+          const res = await bodies.insertOne(doc);
+          bodyMongoId = res.insertedId.toString();
+        }
+
+        await pg.query(
+          `
           INSERT INTO requests
             (basket_id, path, query, method, headers, body_mongo_id)
           VALUES
             ($1,        $2,   $3::jsonb, $4,    $5::jsonb, $6)
         `,
-        [
-          basket.id,
-          path,
-          JSON.stringify(query),
-          method,
-          JSON.stringify(headers),
-          bodyMongoId,
-        ]
+          [
+            basket.id,
+            path,
+            JSON.stringify(query),
+            method,
+            JSON.stringify(headers),
+            bodyMongoId,
+          ]
+        );
+
+        inserted++;
+      }
+
+      console.log(
+        `✅ Seed complete: ${baskets.length} baskets, ${inserted} requests.`
       );
-
-      inserted++;
     }
-
-    console.log(
-      `✅ Seed complete: ${baskets.length} baskets, ${inserted} requests.`
-    );
   } catch (err) {
     console.error("❌ Seed failed:", err.message);
     process.exitCode = 1;

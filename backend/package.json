@@ -10,6 +10,7 @@
     "migrate": "node scripts/migrate.js",
     "seed": "node scripts/seed.js",
     "seed:reset": "SEED_RESET=1 node scripts/seed.js",
+    "seed:empty": "KEEP_EMPTY=1 node scripts/seed.js",
     "smoke": "node scripts/mongo-smoke.js"
   },
   "author": "",
