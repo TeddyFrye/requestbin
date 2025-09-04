@@ -18,7 +18,7 @@ async function connect() {
   return col;
 }
 // call storeRequest to save the raw body and get back the ID
-async function storeRequest(rawBody) {
+async function storeRequest(rawBody, basketId) {
   const col = await connect();
 
   const jsonString =
@@ -28,9 +28,10 @@ async function storeRequest(rawBody) {
     json_string: jsonString,
     size_bytes: Buffer.byteLength(jsonString, "utf8"),
     created_at: new Date(),
+    basketId: basketId,
   };
   const res = await col.insertOne(doc);
-  return res.insertedId.toString(); //
+  return res.insertedId.toString();
 }
 
 async function getRequest(id) {
