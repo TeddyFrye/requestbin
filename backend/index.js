@@ -21,7 +21,7 @@ app.all("/:name", async (request, response) => {
   const id = await MongoDB.storeRequest(body, name);
 
   await PgPersistence.insertRequest({
-    basketId: name,
+    basketId: basket.id,
     path,
     query,
     method,

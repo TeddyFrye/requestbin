@@ -17,16 +17,13 @@ async function connect() {
   await col.createIndex({ created_at: 1 });
   return col;
 }
+
 // call storeRequest to save the raw body and get back the ID
 async function storeRequest(rawBody, basketName) {
   const col = await connect();
 
-  const jsonString =
-    typeof rawBody === "string" ? rawBody : JSON.stringify(rawBody ?? "");
-
   const doc = {
-    json_string: jsonString,
-    size_bytes: Buffer.byteLength(jsonString, "utf8"),
+    json_string: rawBody,
     created_at: new Date(),
     basketName: basketName,
   };
@@ -37,7 +34,7 @@ async function storeRequest(rawBody, basketName) {
 async function getRequest(id) {
   const col = await connect();
   const doc = await col.findOne({ _id: ObjectId(id) });
-  return doc ? JSON.parse(doc.json_string) : null;
+  return doc ? doc.json_string : null;
 }
 
 async function deleteRequest(id) {
@@ -66,7 +63,6 @@ async function getBodyById(id) {
   const col = await connect();
   const doc = await col.findOne({ _id: new ObjectId(id) });
   console.log(doc);
-  // return doc ? JSON.parse(doc.json_string) : null;
   return doc;
 }
 
