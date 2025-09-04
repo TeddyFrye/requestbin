@@ -7,7 +7,11 @@ const PgPersistence = require("./db/pg");
 const MongoDB = require("./db/mongo");
 
 app.use(cors());
+app.use(express.static("public"));
 app.use(express.raw({ type: "*/*" }));
+app.get(["/web", "/web/:basketName"], (request, response) => {
+  response.redirect("/");
+});
 //Endpoints
 app.all("/:name", async (request, response) => {
   const name = request.params.name;

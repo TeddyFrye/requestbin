@@ -11,7 +11,8 @@
     "seed": "node scripts/seed.js",
     "seed:reset": "SEED_RESET=1 node scripts/seed.js",
     "seed:empty": "SEED_RESET=1 KEEP_EMPTY=1 node scripts/seed.js",
-    "smoke": "node scripts/mongo-smoke.js"
+    "smoke": "node scripts/mongo-smoke.js",
+    "build": "rm -r public; cd ../frontend && npm run build && cd ../backend && cp -r ../frontend/dist ./public"
   },
   "author": "",
   "license": "ISC",
