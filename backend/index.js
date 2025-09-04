@@ -7,7 +7,7 @@ const PgPersistence = require("./db/pg");
 const MongoDB = require("./db/mongo");
 
 app.use(cors());
-app.use(express.json());
+app.use(express.raw({ type: "*/*" }));
 //Endpoints
 app.all("/:name", async (request, response) => {
   const name = request.params.name;
@@ -17,7 +17,10 @@ app.all("/:name", async (request, response) => {
     response.status(404).end();
   }
 
-  const { body, path, query, method, headers } = request;
+  const rawBodyBuffer = request.body;
+  const body = rawBodyBuffer?.toString("utf8") ?? null;
+
+  const { path, query, method, headers } = request;
   const id = await MongoDB.storeRequest(body, name);
 
   await PgPersistence.insertRequest({
@@ -28,6 +31,8 @@ app.all("/:name", async (request, response) => {
     headers: JSON.stringify(headers),
     bodyMongoId: id,
   });
+
+  response.sendStatus(200);
 });
 //View all baskets
 app.get("/api/baskets", async (request, response) => {
