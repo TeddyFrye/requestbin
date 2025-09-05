@@ -120,10 +120,10 @@ const BasketPage = () => {
   return (
     <div>
       <BasketHeader requestsCount={allRequests.length} />
-      <RequestBasket allRequests={allRequests} />
       <DeleteAllRequestsButton deleteRequests={handleDeleteRequest} />
       <DeleteBasketButton deleteBasket={handleDeleteBasket} />
       <Link to="/web">Click here to return to all baskets</Link>
+      <RequestBasket allRequests={allRequests} />
     </div>
   );
 };
