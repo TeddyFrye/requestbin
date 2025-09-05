@@ -2,7 +2,7 @@ import { Link, useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { basketService } from "../services/basketService";
 
-const HOST = "https:localhost:5173";
+const HOST = window.location.origin;
 
 const BasketHeader = ({ requestsCount }) => {
   const { id } = useParams();
