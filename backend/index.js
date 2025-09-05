@@ -94,8 +94,8 @@ app.delete("/api/baskets/:name/requests", async (request, response) => {
     response.status(404).end();
   }
 
-  await MongoDB.deleteRequestsByBasketId(name);
-  await PgPersistence.deleteRequests(name);
+  await MongoDB.deleteRequestsByBasketId(basket.id);
+  await PgPersistence.deleteRequests(basket.id);
 
   response.status(204).end();
 });
@@ -108,8 +108,8 @@ app.delete("/api/baskets/:name", async (request, response) => {
     response.status(404).end();
   }
 
-  await MongoDB.deleteRequestsByBasketId(name);
-  await PgPersistence.deleteBasket(name);
+  await MongoDB.deleteRequestsByBasketId(basket.id);
+  await PgPersistence.deleteBasket(basket.id);
 
   response.status(204).end();
 });
