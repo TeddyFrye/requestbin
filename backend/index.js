@@ -19,6 +19,7 @@ app.all("/:name", async (request, response) => {
 
   if (!basket) {
     response.status(404).end();
+    return;
   }
 
   const rawBodyBuffer = request.body;
@@ -70,6 +71,7 @@ app.get("/api/baskets/:name", async (req, res) => {
 
   if (!basket) {
     res.status(404).end();
+    return;
   }
 
   // const requests = await PgPersistence.listRequests(basket.id);
@@ -92,6 +94,7 @@ app.delete("/api/baskets/:name/requests", async (request, response) => {
 
   if (!basket) {
     response.status(404).end();
+    return;
   }
 
   await MongoDB.deleteRequestsByBasketId(basket.id);
@@ -106,6 +109,7 @@ app.delete("/api/baskets/:name", async (request, response) => {
 
   if (!basket) {
     response.status(404).end();
+    return;
   }
 
   await MongoDB.deleteRequestsByBasketId(basket.id);
