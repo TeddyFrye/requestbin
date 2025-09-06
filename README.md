@@ -116,3 +116,27 @@ These should return a baskets table, a requests table, and a count of the docume
 
 - Ensure database connection details in `.env` are correct.
 - Check that both database services are running before seeding.
+
+## Building Frontend Static Files
+
+- **Frontend Only:**
+
+  If you just want to build the frontend static files _without_ copying them to the backend:
+
+  ```sh
+  cd frontend
+  npm run build
+  ```
+
+  This will build the files into `frontend/dist`.
+
+- **To Serve From Backend:**
+
+  If you want to serve the static files from the express backend, you can skip the instructions above and just do the following:
+
+  ```sh
+  cd backend
+  npm run build
+  ```
+
+  This will run the frontend build script and then copy the files into `backend/public`.
