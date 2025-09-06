@@ -108,8 +108,8 @@ async function main() {
         if (hasBody) {
           const doc = {
             json_string: candidateBody,
-            size_bytes: Buffer.byteLength(candidateBody, "utf8"),
             created_at: new Date(),
+            basketName: basket.name,
           };
           const res = await bodies.insertOne(doc);
           bodyMongoId = res.insertedId.toString();
