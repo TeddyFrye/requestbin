@@ -96,7 +96,8 @@ npm install
 Make sure both PostgreSQL and MongoDB are running.
 
 ```sh
-node seed.js
+npm run migrate
+npm run seed
 ```
 
 This will populate both databases with initial data.
