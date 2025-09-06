@@ -103,7 +103,6 @@ async function getRequestsWithBodies(basketId) {
       try {
         if (req.body_mongo_id) {
           const doc = await getBodyById(req.body_mongo_id);
-          // body = doc?.json_string ?? null; --> og implementation
           body = doc?.json_string ?? null;
         }
       } catch (err) {

@@ -47,10 +47,6 @@ app.get("/api/baskets", async (request, response) => {
 });
 //Add a new basket
 app.post("/api/baskets", async (request, response) => {
-  // const name = generateName();
-  // const newBasket = await PgPersistence.createBasket(name);
-
-  // response.json(newBasket);
   const name = generateName();
 
   let newBasket;
@@ -74,10 +70,6 @@ app.get("/api/baskets/:name", async (req, res) => {
     return;
   }
 
-  // const requests = await PgPersistence.listRequests(basket.id);
-  // console.log(requests, "hello");
-  // response.json(requests);
-  // const basketId = parseInt(req.params.id, 10);
   const basketId = basket.id;
   try {
     const fullRequests = await PgPersistence.getRequestsWithBodies(basketId);
