@@ -9,7 +9,7 @@ const BasketHeader = ({ requestsCount }) => {
   return (
     <section>
       <p>Basket: {id}</p>
-      <p>Requests are collected at: {`${HOST}/${id}`}</p>
+      <p>Requests are collected at: {`${HOST}/api/endpoints/${id}`}</p>
       <p>Requests: {requestsCount}</p>
     </section>
   );
