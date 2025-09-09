@@ -47,6 +47,20 @@
   sudo -u postgres createdb -O appuser requestbin 2>/dev/null || true
   ```
 
+- Note from Nathan: the first part of the above didn't work for me (syntax error) so I just entered the `psql` terminal and pasted the SQL directly in there:
+
+  ```sh
+  sudo -u postgres psql # runs `psql` as the postgres user
+  ```
+
+  ```sql
+  CREATE ROLE appuser LOGIN PASSWORD 'dev_password';
+  ```
+
+  ```sh
+  sudo -u postgres createdb -O appuser requestbin
+  ```
+
 ### Install MongoDB
 
 (It may ask for a password, you can just cancel out of that and it should still install)
@@ -75,10 +89,7 @@
 copy this into your `.env` file:
 
 ```text
-DATABASE_URL=postgres://appuser@localhost:5432/requestbin
-
-PGUSER=appuser
-PGDATABASE=requestbin
+DATABASE_URL=postgres://appuser:dev_password@localhost:5432/requestbin
 
 MONGO_URL=mongodb://localhost:27017
 MONGO_DB_NAME=requestbin
