@@ -13,7 +13,7 @@ app.get(["/web", "/web/:basketName"], (request, response) => {
   response.redirect("/");
 });
 //Endpoints
-app.all("/:name", async (request, response) => {
+app.all("/api/endpoints/:name", async (request, response) => {
   const name = request.params.name;
   const basket = await PgPersistence.getBasket(name);
 
