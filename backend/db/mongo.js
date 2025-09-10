@@ -1,22 +1,19 @@
 const { MongoClient, ObjectId } = require("mongodb");
-const { getSecretValue } = require("../aws-secrets");
+const { getSecretValue, getParameterValue } = require("../aws-secrets");
 
 // localhost version for testing, env variables for production
 const MONGO_URL = process.env.MONGO_URL || "mongodb://localhost:27017";
 const MONGO_DB_NAME = process.env.MONGO_DB_NAME || "requestbin";
 const COLLECTION = process.env.MONGO_COLLECTION || "request_bodies";
 
-const OPTIONS = process.env.MONGO_OPTIONS || "";
-
 let connectionUrl = (async () => {
   if (process.env.ENV === "production") {
-    const mongoCredentialsString = await getSecretValue(
-      process.env.MONGO_CREDENTIALS_KEY
-    );
-    const { host, password, port, username } = JSON.parse(
-      mongoCredentialsString
-    );
-    return `mongodb://${username}:${password}@${host}:${port}?${OPTIONS}`;
+    const [credentialsString, optionsString] = await Promise.all([
+      getSecretValue(process.env.MONGO_CREDENTIALS_KEY),
+      getParameterValue(process.env.MONGO_OPTIONS_NAME),
+    ]);
+    const { host, password, port, username } = JSON.parse(credentialsString);
+    return `mongodb://${username}:${password}@${host}:${port}?${optionsString}`;
   } else {
     return MONGO_URL;
   }

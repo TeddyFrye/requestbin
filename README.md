@@ -108,6 +108,9 @@ ENV=production
 PG_CREDENTIALS_KEY=<secret key for rds credentials>
 PG_DATABASE=requestbin
 
+MONGO_CREDENTIALS_KEY=<secret key for documentDB credentials>
+MONGO_OPTIONS_NAME=<name for options parameter>
+
 MONGO_URL=mongodb://localhost:27017
 MONGO_DB_NAME=requestbin
 MONGO_COLLECTION=request_bodies
