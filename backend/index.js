@@ -12,6 +12,9 @@ app.use(express.raw({ type: "*/*" }));
 app.get(["/web", "/web/:basketName"], (request, response) => {
   response.redirect("/");
 });
+app.get("/api/ping", (request, response) => {
+  response.sendStatus(200);
+});
 //Endpoints
 app.all("/api/endpoints/:name", async (request, response) => {
   const name = request.params.name;
