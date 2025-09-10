@@ -106,7 +106,7 @@ For production:
 ENV=production
 
 PG_CREDENTIALS_KEY=<secret key for rds credentials>
-PG_DATABASE=requestbin
+PG_DATABASE_NAME=<name for database parameter>
 
 MONGO_CREDENTIALS_KEY=<secret key for documentDB credentials>
 MONGO_OPTIONS_NAME=<name for options parameter>

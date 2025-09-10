@@ -2,15 +2,17 @@ const { getBodyById } = require("./mongo");
 const fs = require("fs");
 const path = require("path");
 const { Pool } = require("pg");
-const { getSecretValue } = require("../aws-secrets");
+const { getSecretValue, getParameterValue } = require("../aws-secrets");
 
 let pool;
 
 (async () => {
   if (process.env.ENV === "production") {
-    const dbCredentials = await getSecretValue(process.env.PG_CREDENTIALS_KEY);
+    const [dbCredentials, database] = await Promise.all([
+      getSecretValue(process.env.PG_CREDENTIALS_KEY),
+      getParameterValue(process.env.PG_DATABASE_NAME),
+    ]);
     const { host, password, port, username: user } = JSON.parse(dbCredentials);
-    const database = process.env.PG_DATABASE;
 
     pool = new Pool({
       database,
