@@ -2,10 +2,29 @@ const { getBodyById } = require("./mongo");
 const fs = require("fs");
 const path = require("path");
 const { Pool } = require("pg");
+const { getSecretValue } = require("../aws-secrets");
 
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL || undefined,
-});
+let pool;
+
+(async () => {
+  if (process.env.ENV === "production") {
+    const dbCredentials = await getSecretValue(process.env.PG_CREDENTIALS_KEY);
+    const { host, password, port, username: user } = JSON.parse(dbCredentials);
+    const database = process.env.PG_DATABASE;
+
+    pool = new Pool({
+      database,
+      host,
+      password,
+      port,
+      user,
+    });
+  } else {
+    pool = new Pool({
+      connectionString: process.env.DATABASE_URL || undefined,
+    });
+  }
+})();
 
 async function runMigrations() {
   const sqlPath = path.join(__dirname, "..", "sql", "migrate.sql");

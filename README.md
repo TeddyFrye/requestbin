@@ -88,8 +88,25 @@
 
 copy this into your `.env` file:
 
+For development:
+
 ```text
+ENV=dev
+
 DATABASE_URL=postgres://appuser:dev_password@localhost:5432/requestbin
+
+MONGO_URL=mongodb://localhost:27017
+MONGO_DB_NAME=requestbin
+MONGO_COLLECTION=request_bodies
+```
+
+For production:
+
+```text
+ENV=production
+
+PG_CREDENTIALS_KEY=<secret key for rds credentials>
+PG_DATABASE=requestbin
 
 MONGO_URL=mongodb://localhost:27017
 MONGO_DB_NAME=requestbin
