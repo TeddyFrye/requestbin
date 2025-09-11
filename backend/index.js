@@ -12,7 +12,7 @@ app.use(express.raw({ type: "*/*" }));
 app.get(["/web", "/web/:basketName"], (request, response) => {
   response.redirect("/");
 });
-app.get("/api/ping", (request, response) => {
+app.get("/api/health", (request, response) => {
   response.sendStatus(200);
 });
 //Endpoints
