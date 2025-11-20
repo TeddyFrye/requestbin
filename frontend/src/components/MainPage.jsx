@@ -3,7 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 
 import { basketService } from "../services/basketService";
 
-// TODO: extract this to a project wide file (alongside App.jsx)
 const URL_PREFIX = "/web";
 
 const CREATE_TITLE = "Create New Basket";

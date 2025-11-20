@@ -4,7 +4,10 @@ const path = require("path");
 const { Pool } = require("pg");
 
 (async () => {
-  const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+  const pool = new Pool({
+    connectionString: process.env.DATABASE_URL,
+    ssl: { rejectUnauthorized: false },
+  });
   const sqlPath = path.join(__dirname, "..", "sql", "migrate.sql");
   const sql = fs.readFileSync(sqlPath, "utf8");
 

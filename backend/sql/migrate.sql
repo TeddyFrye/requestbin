@@ -1,10 +1,10 @@
-CREATE TABLE baskets (
+CREATE TABLE IF NOT EXISTS baskets (
     id SERIAL PRIMARY KEY,
     name TEXT UNIQUE NOT NULL,
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
-CREATE TABLE requests (
+CREATE TABLE IF NOT EXISTS requests (
     id SERIAL PRIMARY KEY,
 		basket_id INTEGER NOT NULL REFERENCES baskets(id) ON DELETE CASCADE,
     path TEXT,
@@ -15,8 +15,8 @@ CREATE TABLE requests (
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
-CREATE INDEX idx_requests_created_at 
+CREATE INDEX IF NOT EXISTS idx_requests_created_at 
 		ON requests (created_at DESC);
 
-CREATE INDEX idx_requests_basket_created_at
+CREATE INDEX IF NOT EXISTS idx_requests_basket_created_at
 		ON requests (basket_id, created_at DESC);

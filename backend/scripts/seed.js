@@ -1,3 +1,9 @@
+// 🚨 Put this at very top
+if (process.env.NODE_ENV === "production") {
+  console.log("Skipping MongoDB seed in production.");
+  process.exit(0);
+}
+
 require("dotenv").config();
 const { Pool } = require("pg");
 const { MongoClient } = require("mongodb");

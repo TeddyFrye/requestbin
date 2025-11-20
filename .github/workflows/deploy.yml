@@ -1,0 +1,70 @@
+name: Build and Push to ECR
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch: {}
+
+jobs:
+  deploy:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      AWS_REGION: us-east-1
+      ECR_REPOSITORY: requestbin
+      IMAGE_TAG: ${{ github.sha }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Create ECR repo if it doesn't exist
+        run: |
+          aws ecr describe-repositories --repository-names "$ECR_REPOSITORY" || \
+          aws ecr create-repository --repository-name "$ECR_REPOSITORY"
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
+
+      - name: Capture image URI
+        id: push-image
+        run: |
+          echo "image_uri=${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}" >> "$GITHUB_OUTPUT"
+
+      - name: Update requestbin.json with image URI
+        run: |
+          IMAGE_URI="${{ steps.push-image.outputs.image_uri }}"
+
+          if [ ! -f requestbin.json ]; then
+            echo '{"image_url": ""}' > requestbin.json
+          fi
+
+          jq --arg uri "$IMAGE_URI" '.image_url = $uri' requestbin.json > requestbin.tmp
+          mv requestbin.tmp requestbin.json
+
+      - name: Commit updated requestbin.json
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+
+          git add requestbin.json
+          git commit -m "Update image URI to ${{ steps.push-image.outputs.image_uri }}" || echo "No changes to commit"
+          git push

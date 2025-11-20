@@ -1,7 +1,7 @@
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { basketService } from "../services/basketService";
-
+// import "./BasketPage.css";
 const HOST = window.location.origin;
 
 const BasketHeader = ({ requestsCount }) => {
@@ -55,8 +55,6 @@ const ViewBody = ({ body }) => {
 
 const RequestBasket = ({ allRequests }) => {
   const RequestItem = ({ request, index }) => {
-    // converted timestamp string into Date for easy formatting of time/date
-    // created ViewHeaders to see all headers in a list rather than array
     return (
       <li key={index}>
         <p>Method: {request.method}</p>
